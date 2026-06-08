@@ -2,14 +2,14 @@ import requests
 import pandas as pd
 import logging
 
-# Set up logging so you know what happened if it fails
+# Set up logging to know what happened if it fails
 logging.basicConfig(level=logging.INFO)
 
 
 def fetch_weather_data(url):
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Check if the website actually worked
+        response.raise_for_status()  # Check if the website worked
         return response.json()
     except Exception as e:
         logging.error(f"Failed to fetch data: {e}")
@@ -17,12 +17,12 @@ def fetch_weather_data(url):
 
 
 def transform_data(raw_data):
-    # Extract only what we need
+    # Extract only necessary data
     return pd.DataFrame([raw_data["current_weather"]])
 
 
 def save_to_csv(df, filename="weather.csv"):
-    df.to_csv(filename, index=False)
+    df.to_csv(filename, index=False) # if true, a numbered row will bloat code
     logging.info(f"Data successfully saved to {filename}")
 
 
