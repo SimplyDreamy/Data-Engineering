@@ -1,10 +1,16 @@
 name: Hourly Weather Sync
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   schedule:
     # Run at minute 0 of every hour
     - cron: '0 * * * *'
   workflow_dispatch: # run manually with a button
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -13,24 +19,38 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
       - name: Install dependencies
         run: pip install requests pandas
 
+      - name: Check my location
+        run: |
+          pwd
+          ls -R
+
       - name: Run weather script
-        working-directory: ./Day1
-        run: python weather.py
+        working-directory: "Day 1"
+        run: python main.py
 
       - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          mv "Day 1/weather.csv" ../weather_temp.csv # 1. Temporarily move the new CSV to a safe spot outside the git repo folders
+          
+          git fetch origin data
+          git checkout data || git checkout -b data
+          git pull origin data --rebase || echo "No remote data yet"
+          
+          mv ../weather_temp.csv ./weather.csv
+
           git add weather.csv
-          git commit -m "Automated weather update" || exit 0
-          git push
+          git commit -m "Automated weather update: $(date)" || exit 0 # OR incase it errors
+          git push origin data
