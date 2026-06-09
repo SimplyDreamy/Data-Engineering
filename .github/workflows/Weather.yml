@@ -6,6 +6,9 @@ on:
     - cron: '0 * * * *'
   workflow_dispatch: # run manually with a button
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest #faster than windows
@@ -37,5 +40,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "Day 1/weather.csv"
-          git commit -m "Automated weather update" || exit 0
-          git push
+          git commit -m "Automated weather update" || exit 0 # OR incase it errors
+          git push origin main:data
