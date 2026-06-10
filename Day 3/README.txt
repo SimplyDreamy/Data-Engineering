@@ -7,6 +7,7 @@ I will be less confused
 
 Since Day 2 had a streamlit app in mind but didn't finish,
 I decided that I will just make a simple app with it
+Can be found here: https://data-engineering-yadgel8jprfpbspzpzkcjc.streamlit.app/
 
 -------------------------------
     Roadblocks & Debugging
